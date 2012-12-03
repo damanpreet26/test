@@ -24,6 +24,13 @@ backup()
  sudo cp /etc/apache2/httpd.conf Automation/other_files/   #copies httpd.conf file in Automation/other_files folder
 }
 
+
+media()
+{
+  sudo cp -r Automation/other_files/media/ /usr/local/lib/python2.7/dist-packages/django/contrib/admin/
+  sudo chmod -R 777 /usr/local/lib/python2.7/dist-packages/django/contrib/admin/media/
+}
+
 run()  # the function 
 {
   echo ""
@@ -263,6 +270,7 @@ check()
    git clone https://github.com/sandeepmadaan/Automation.git
 
    backup       #backs up important files in other_files folder(/Automation/other_files/)
+   media        #copies media folder in (~/contrib/admin/)
    run          #runs run function
    restart      #runs browser function
    browser      #runs browser function
