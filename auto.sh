@@ -364,4 +364,3 @@ if  [ ! -f /usr/bin/mysql ]  # checks if django and mysql are installed on the s
       apt-get install mysql-server
 fi
 django
-
