@@ -20,7 +20,7 @@
 
 backup()
 {
-  sudo cp /etc/apache2/httpd.conf Automation/other_files/   #copies httpd.conf file in Automation/other_files folder
+  sudo cp /etc/apache2/httpd.conf Automation/other_files/   #copies httpd.conf file in Automation/other_files/ folder
 }
 
 
@@ -65,7 +65,7 @@ run()  # the function
 # inputs database name from the user
             read -p "enter mysql username :" db_user
             read -p "enter mysql password :" db_password
-            RESULT=`mysql --user="$db_user" --password="$db_password" --skip-column-names -e "SHOW DATABASES LIKE 'mysql'"` 2> /dev/null
+            RESULT=`mysql --user="$db_user" --password="$db_password" --skip-column-names -e "SHOW DATABASES LIKE 'mysql'"` 2>/dev/null
             if [ $RESULT ]; then
                echo ""
                echo "Username and password match"
@@ -137,12 +137,12 @@ run()  # the function
   ######################################################################
 
 
- path=$PWD     #this passes PWD value in path
- echo "Successfully downloading the software at-$path"
- echo ""
- sed -i "s#mPath#"$path"#g" Automation/other_files/hhtp_cont   
- sed -i "s#mPath#"$path"#g" Automation/apache/django.wsgi
- sed -i "s#mPath#"$path"#g" Automation/settings.py
+  path=$PWD     #this passes PWD value in path
+  echo "Successfully downloading the software at-$path"
+  echo ""
+  sed -i "s#mPath#"$path"#g" Automation/other_files/hhtp_cont   
+  sed -i "s#mPath#"$path"#g" Automation/apache/django.wsgi
+  sed -i "s#mPath#"$path"#g" Automation/settings.py
 
 
   ######################################################################
@@ -151,7 +151,7 @@ run()  # the function
   #
   ######################################################################
 
-  sed -i "s/user_name/$NAME/" Automation/apache/django.wsgi 
+  #sed -i "s/user_name/$NAME/" Automation/apache/django.wsgi 
 
   ######################################################################
   #
@@ -161,11 +161,11 @@ run()  # the function
 
   # need sudo power for this
 
-  cat Automation/other_files/hhtp_cont >> /etc/apache2/httpd.conf    
-      #this appends the text from the file to the httpd.conf
+  sudo bash -c  "cat Automation/other_files/hhtp_cont >> /etc/apache2/httpd.conf"   
+  #this appends the text from the file to the httpd.connf
 
 
-  sed -i "s/user_name/$NAME/" /etc/apache2/httpd.conf           
+  #sed -i "s/user_name/$NAME/" /etc/apache2/httpd.conf           
       #this replaces the word to the username
 
 
@@ -204,7 +204,7 @@ run()  # the function
   elif [ $db_yesno = n ] || [ $db_yesno = N ] || [ $db_yesno = no ] || [ $db_yesno = NO ]  
      then
         echo ""
-        echo "now u get a new database"
+        echo "now you get a new database"
         echo "enjoy your experience"
         cd Automation/
         python manage.py syncdb                   #creates a blnk database for use, using django commands
@@ -237,7 +237,7 @@ run()  # the function
 
 # this Inserts into the table the input values.
       mysql  --user=$db_user --password=$db_password $db_name << EOF
-      Insert into tcc_organisation (id, name, address, phone, director, logo_upload) values( "$id", "$name", "$address", "$phone", '$dir', "$logo");
+      Insert into tcc_organisation (id, name, address, phone, director) values("$id", "$name", "$address", "$phone", '$dir');
 EOF
 
 
@@ -261,7 +261,7 @@ EOF
 
 restart()
 {
-  /etc/init.d/apache2 restart               #restarts apache
+  sudo /etc/init.d/apache2 restart               #restarts apache
 }
 
 browser()
@@ -293,14 +293,14 @@ check()
 main()   #this is the first function, and installs secondary requirements
 {
   echo "-------installing required packages------"
-  apt-get install apache2 libapache2-mod-wsgi 
-  apt-get install python-mysqldb
+  sudo apt-get install apache2 libapache2-mod-wsgi 
+  sudo apt-get install python-mysqldb
   sudo apt-get install python-setuptools
-  easy_install pip
+  sudo easy_install pip
   echo ""
   echo "-------installing django modules---------"
-  pip install django-registration
-  pip install django-tagging
+  sudo pip install django-registration
+  sudo pip install django-tagging
 
   
 
@@ -350,7 +350,7 @@ django()
  if  [ ! -d /usr/local/lib/python2.7/dist-packages/django ]  #checks if django is installed with python 2.7
     then
        wget http://www.djangoproject.com/m/releases/1.4/Django-1.4.2.tar.gz     # download tar folder of django
-       tar xzvf Django-1.4.2.tar.gz                                             # opens the tar file
+       sudo tar xzvf Django-1.4.2.tar.gz                                             # opens the tar file
        cd Django-1.4.2                                                          # get into the django folder
        sudo python setup.py install             
            
@@ -361,6 +361,7 @@ main
 # Script starts here
 if  [ ! -f /usr/bin/mysql ]  # checks if django and mysql are installed on the system 
    then      
-      apt-get install mysql-server
+      sudo apt-get install mysql-server
 fi
 django
+
