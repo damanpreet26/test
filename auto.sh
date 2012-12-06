@@ -184,28 +184,36 @@ run()  # the function
 
   echo ""
   echo ""
-  read -p "enter 'Yes' for the demo database & 'No' for new database : "  db_yesno
+  a=1
+  while [ $a -ne 2 ]
+  do
+  {
+    read -p "Enter 'Yes' for the demo(test) database & 'No' for blank database : "  db_yesno
 
 #this checks for every yes condition the user might enter in.
-  if [ $db_yesno = y ] || [ $db_yesno = Y ] ||[ $db_yesno = yes ] ||[ $db_yesno = YES ] ||[ $db_yesno = Yes ]     
-     then 
+    if [ $db_yesno = y ] || [ $db_yesno = Y ] || [ $db_yesno = yes ] || [ $db_yesno = YES ] || [ $db_yesno = Yes ]     
+    then 
         echo ""
-        echo "now you get the demo.sql in your database"
-        echo "get ready to use TCC automation software"
-
+        echo "Now you get the demo database in your database"
+        echo "Get ready to use TCC automation software"
+        echo ""
+        
 # this imports demo.sql to the database defined by the user
         mysql --user=$db_user --password=$db_password $db_name < Automation/other_files/demo.sql 
         cd Automation/
 
 # this creates a new superuser
         python manage.py createsuperuser
+        break        
+
 
 #defined every possible no condition
-  elif [ $db_yesno = n ] || [ $db_yesno = N ] || [ $db_yesno = no ] || [ $db_yesno = NO ]||[ $db_yesno = No ]
-     then
+    elif [ $db_yesno = n ] || [ $db_yesno = N ] || [ $db_yesno = no ] || [ $db_yesno = NO ] || [ $db_yesno = No ]
+    then
         echo ""
-        echo "now you get a new database"
-        echo "enjoy your experience"
+        echo "Now you get a new(blank) database"
+        echo "Enjoy your experience"
+        echo ""
         cd Automation/
         python manage.py syncdb                   #creates a blnk database for use, using django commands
 
@@ -213,50 +221,60 @@ run()  # the function
         result1=`mysql --user=$db_user --password=$db_password --skip-column-names -e "use $db_name;" -e "select count(*) from auth_user;"`
         
 # ths checks if the count is zero or not
-       if [ $result1 = 0 ]
-          then
+        if [ $result1 = 0 ]
+        then
              echo ""
              echo "you need to create a superuser"
 #this creates a superuser
              python manage.py createsuperuser
 
-      else
+        else
          echo ""
-      fi
+        fi
 
 # there is a need to enter Organisation details in the database.
-      echo ""
-      echo "Now get ready to ADD Organisation details to your software."
-      echo ""
-      read -p "enter organisation id :" id
-      read -p "enter organisation name :" name
-      read -p "enter organisation address :" address
-      read -p "phone/contact number :" phone
-      read -p "Director of the Organisation :" dir
+       echo ""
+       echo "Now get ready to ADD Organisation details to your software."
+       echo ""
+       read -p "enter organisation id :" id
+       read -p "enter organisation name :" name
+       read -p "enter organisation address :" address
+       read -p "phone/contact number :" phone
+       read -p "Director of the Organisation :" dir
 #read -p "logo" logo
 
 # this Inserts into the table the input values.
-      mysql  --user=$db_user --password=$db_password $db_name << EOF
-      Insert into tcc_organisation (id, name, address, phone, director) values("$id", "$name", "$address", "$phone", '$dir');
+       mysql  --user=$db_user --password=$db_password $db_name << EOF
+       Insert into tcc_organisation (id, name, address, phone, director) values("$id", "$name", "$address", "$phone", '$dir');
 EOF
 
 
 # There is a need to enter Department details in the database.
-      echo ""
-      echo "Now get ready to ADD Departmant details to your software."
-      echo ""
-      read -p "enter the Department id :" id
-      read -p "enter Department name :" name
-      read -p "enter Department address :" address
-      read -p "phone/contact number :" phone
-      read -p "Dean of the Department:" dean
-      read -p "enter the fax number :" faxno
+       echo ""
+       echo "Now get ready to ADD Departmant details to your software."
+       echo ""
+       read -p "enter the Department id :" id
+       read -p "enter Department name :" name
+       read -p "enter Department address :" address
+       read -p "phone/contact number :" phone
+       read -p "Dean of the Department:" dean
+       read -p "enter the fax number :" faxno
 
 # this inserts values into corresponding fields in tcc_department table
-      mysql  --user=$db_user --password=$db_password $db_name << EOF
-      Insert into tcc_department (id, organisation_id, name, address, phone, dean, faxno) values( "$id", 1, "$name", "$address", "$phone", '$dean', "$faxno");
+       mysql  --user=$db_user --password=$db_password $db_name << EOF
+       Insert into tcc_department (id, organisation_id, name, address, phone, dean, faxno) values( "$id", 1, "$name", "$address", "$phone", '$dean', "$faxno");
 EOF
-  fi    
+       break
+  else
+       echo ""
+       echo "Wrong Input"
+       echo ""
+       echo "Enter 'Yes' for the demo database"
+       echo "Enter 'No' for the new(blank) database"
+       echo ""
+  fi
+  }
+done
 }
 
 restart()
