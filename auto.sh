@@ -187,10 +187,10 @@ run()  # the function
   read -p "enter 'Yes' for the demo database & 'No' for new database : "  db_yesno
 
 #this checks for every yes condition the user might enter in.
-  if [ $db_yesno = y ] || [ $db_yesno = Y ] ||[ $db_yesno = yes ] ||[ $db_yesno = YES ]     
+  if [ $db_yesno = y ] || [ $db_yesno = Y ] ||[ $db_yesno = yes ] ||[ $db_yesno = YES ] ||[ $db_yesno = Yes ]     
      then 
         echo ""
-        echo "now u get the demo.sql in your database"
+        echo "now you get the demo.sql in your database"
         echo "get ready to use TCC automation software"
 
 # this imports demo.sql to the database defined by the user
@@ -201,7 +201,7 @@ run()  # the function
         python manage.py createsuperuser
 
 #defined every possible no condition
-  elif [ $db_yesno = n ] || [ $db_yesno = N ] || [ $db_yesno = no ] || [ $db_yesno = NO ]  
+  elif [ $db_yesno = n ] || [ $db_yesno = N ] || [ $db_yesno = no ] || [ $db_yesno = NO ]||[ $db_yesno = No ]
      then
         echo ""
         echo "now you get a new database"
