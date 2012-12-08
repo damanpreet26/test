@@ -65,7 +65,7 @@ run()  # the function
 # inputs database name from the user
             read -p "enter mysql username :" db_user
             read -p "enter mysql password :" db_password
-            RESULT=`mysql --user="$db_user" --password="$db_password" --skip-column-names -e "SHOW DATABASES LIKE 'mysql'"` 2>/dev/null
+            RESULT=`mysql --user="$db_user" --password="$db_password" --skip-column-names -e "SHOW DATABASES LIKE 'mysql'"` 2> /dev/null
             if [ $RESULT ]; then
                echo ""
                echo "Username and password match"
